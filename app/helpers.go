@@ -13,6 +13,7 @@ func parse(w http.ResponseWriter, r *http.Request, data interface{}) error {
 
 func sendResponse(w http.ResponseWriter, _ *http.Request, data interface{}, status int) {
 	w.Header().Add("Content-Type", "application/json")
+	enableCors(&w)
 	w.WriteHeader((status))
 	if data == nil {
 		return
@@ -30,4 +31,9 @@ func mapPostToJson(p *models.Post) models.JsonPost {
 		Content: p.Content,
 		Author:  p.Author,
 	}
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 }
