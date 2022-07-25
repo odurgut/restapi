@@ -30,7 +30,7 @@
     color: rgb(154, 154, 154);
 }
 
-#button{
+.myButton{
     background-color: #6489de;
     border: none;
     color: white;
@@ -45,12 +45,12 @@
     border-radius: 6px;
 }
 
-#button:hover {
+.myButton:hover {
     background-color: #29478b;
     color: white;
 }
 
-#button:active{
+.myButton:active{
     background-color: #9e110d;
     color: white;
 }
