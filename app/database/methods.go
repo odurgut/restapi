@@ -23,3 +23,23 @@ func (d *DB) GetPosts() ([]*models.Post, error) {
 	return posts, nil
 
 }
+
+func (d *DB) DeletePost(id string) error {
+	_, err := d.db.Exec("DELETE FROM posts WHERE id = $1", id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *DB) GetPostById(id string) (*models.Post, error) {
+	var post models.Post
+	err := d.db.Get(&post, "SELECT * FROM posts WHERE id = $1", id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &post, nil
+}

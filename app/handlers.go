@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"restapi/app/models"
+
+	"github.com/gorilla/mux"
 )
 
 func (a *App) indexHandler() http.HandlerFunc {
@@ -56,4 +58,45 @@ func (a *App) GetPostsHandler() http.HandlerFunc {
 		}
 		sendResponse(w, r, resp, http.StatusOK)
 	}
+}
+
+func (a *App) DeletePostHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := mux.Vars(r)["id"]
+		if id == "" {
+			log.Printf("Cannot get id from query. \n")
+			sendResponse(w, r, nil, http.StatusBadRequest)
+			return
+		}
+
+		err := a.DB.DeletePost(id)
+		if err != nil {
+			log.Printf("Cannot delete post from DB. err=%v \n", err)
+			sendResponse(w, r, nil, http.StatusInternalServerError)
+			return
+		}
+
+		sendResponse(w, r, nil, http.StatusOK)
+	}
+}
+func (a *App) GetPostByIdHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := mux.Vars(r)["id"]
+		if id == "" {
+			log.Printf("Cannot get id from query. \n")
+			sendResponse(w, r, nil, http.StatusBadRequest)
+			return
+		}
+
+		post, err := a.DB.GetPostById(id)
+		if err != nil {
+			log.Printf("Cannot get post from DB. err=%v \n", err)
+			sendResponse(w, r, nil, http.StatusInternalServerError)
+			return
+		}
+
+		resp := mapPostToJson(post)
+		sendResponse(w, r, resp, http.StatusOK)
+	}
+
 }
